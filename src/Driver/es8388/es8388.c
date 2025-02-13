@@ -404,6 +404,21 @@ error_t es8388_config_fmt(codec_mode_t mode, i2s_format_t fmt) {
  *     - (0)   Success
  */
 #if AI_THINKER_ES8388_VOLUME_HACK == 1
+error_t es8388_set_left_right_volume(int left_volume, int right_volume) {
+	AD_LOGD("es8388_set_left_right_volume (HACK 1): %d %d", left_volume, right_volume);
+	error_t res = RESULT_OK;
+	
+	// https://dl.radxa.com/rock2/docs/hw/ds/ES8388%20user%20Guide.pdf pages 23 & 24
+	// DAC Volume Control -DAC LDACVOL RDACVOL default 0 = 0DB; Default value 192 = – -96 dB
+	res = es_write_reg(ES8388_ADDR, ES8388_DACCONTROL4, left_volume); // LDACVOL (digital volume control)
+	res |= es_write_reg(ES8388_ADDR, ES8388_DACCONTROL5, right_volume); // RDACVOL
+	// Lineout 1 & 2 - LOUT1 & 2, RLOUT1 & 2 volume: 6 bits
+	res |= es_write_reg(ES8388_ADDR, ES8388_DACCONTROL24, 0b011110); // LOUT1VOL 0b011110 = 0db, 0b011111 = +1.5db, 0b011101 = -1.5db
+	res |= es_write_reg(ES8388_ADDR, ES8388_DACCONTROL25, 0b011110); // ROUT1VOL
+	res |= es_write_reg(ES8388_ADDR, ES8388_DACCONTROL26, 0b011110); // LOUT2VOL 0b011110 = 0db, 0b011111 = +1.5db, 0b011101 = -1.5db
+	res |= es_write_reg(ES8388_ADDR, ES8388_DACCONTROL27, 0b011110); // ROUT2VOL
+	return res;
+}
 
 error_t es8388_set_voice_volume(int volume) {
   AD_LOGD("es8388_set_voice_volume (HACK 1): %d", volume);

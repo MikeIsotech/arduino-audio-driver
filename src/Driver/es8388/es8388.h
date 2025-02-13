@@ -185,16 +185,27 @@ error_t es8388_start(codec_mode_t mode);
  */
 error_t es8388_stop(codec_mode_t mode);
 
-/**
- * @brief  Set voice volume
- *
- * @param volume:  voice volume (0~100)
- *
- * @return
- *     - RESULT_OK
- *     - RESULT_FAIL
- */
-error_t es8388_set_voice_volume(int volume);
+	/**
+	 * @brief  Set voice volume for each channel indiviually *** MikeR hack ***
+	 *
+	 * @param volume:  voice volume (0~100)
+	 *
+	 * @return
+	 *     - RESULT_OK
+	 *     - RESULT_FAIL
+	 */
+	error_t es8388_set_left_right_volume(int left_volume, int right_volume);
+	
+	/**
+	 * @brief  Set voice volume
+	 *
+	 * @param volume:  voice volume (0~100)
+	 *
+	 * @return
+	 *     - RESULT_OK
+	 *     - RESULT_FAIL
+	 */
+	error_t es8388_set_voice_volume(int volume);
 
 /**
  * @brief Get voice volume
